@@ -396,8 +396,8 @@ export default function App() {
           <div className="relative w-full p-1 sm:p-2 rounded-2xl bg-gradient-to-b from-[#2a1806]/95 via-stone-950 to-[#160b03]/95 border-2 border-amber-500/50 shadow-[0_0_40px_rgba(0,0,0,0.95)] flex flex-col justify-center my-auto hardware-accelerated">
             
             {/* Cleopatra Recostada Figure (Mobile Only - positioned reclining on the top frame) */}
-            <div className="absolute -top-10 left-1/2 -translate-x-1/2 z-30 flex items-center justify-center pointer-events-none sm:hidden w-full px-2">
-              <div className="relative w-full max-w-[330px] h-20 overflow-visible flex items-center justify-center">
+            <div className="absolute -top-24 left-1/2 -translate-x-1/2 z-30 flex items-center justify-center pointer-events-none sm:hidden w-full px-1">
+              <div className="relative w-full max-w-[360px] h-28 overflow-visible flex items-center justify-center">
                 {/* Subtle base glow to ground her to the frame */}
                 <div className="absolute bottom-0 w-4/5 h-4 bg-amber-500/10 blur-lg rounded-[100%]" />
                 
