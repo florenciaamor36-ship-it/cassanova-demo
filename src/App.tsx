@@ -18,7 +18,7 @@ import { haptic } from './utils/haptics';
 import templeBg from './assets/images/cleopatra_temple_bg_1789482734602.jpg';
 import slotFrameImg from './assets/images/cleopatra_slot_frame_1789482747217.jpg';
 import cleopatraRecliningImg from './assets/images/cleopatra_mobile_reclining_transparent.png';
-import cleopatraDesktopLeftImg from './assets/images/cleopatra_desktop_left_transparent.png';
+import cleopatraDesktopLeftImg from './assets/images/cleopatra_desktop_left_black.png';
 
 const STORAGE_KEYS = {
   BALANCE: 'cleopatra_slot_balance',
