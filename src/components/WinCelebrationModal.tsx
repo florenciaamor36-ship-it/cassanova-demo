@@ -90,15 +90,12 @@ export const WinCelebrationModal: React.FC<WinCelebrationModalProps> = ({
   const [displayAmount, setDisplayAmount] = useState(0);
   const [isCountUpComplete, setIsCountUpComplete] = useState(type === 'FREE_SPINS_TRIGGER');
 
-  // Determine initial variant based on prop or win tier
+  // Each prize popup uses exactly one celebration card.
+  // If the caller does not force a style, choose one at random when the popup opens.
   const getInitialVariant = (): CelebrationVariant => {
     if (initialVariant) return initialVariant;
-    if (type === 'VARIANT_1') return 'VARIANT_1';
-    if (type === 'VARIANT_2') return 'VARIANT_2';
-    if (type === 'VARIANT_3') return 'VARIANT_3';
-    if (type === 'ULTRA_WIN' || type === 'MEGA_WIN') return 'VARIANT_3';
-    if (type === 'SUPER_WIN') return 'VARIANT_2';
-    return 'VARIANT_1';
+    const variants: CelebrationVariant[] = ['VARIANT_1', 'VARIANT_2', 'VARIANT_3'];
+    return variants[Math.floor(Math.random() * variants.length)];
   };
 
   const [activeVariant, setActiveVariant] = useState<CelebrationVariant>(getInitialVariant);
@@ -653,72 +650,9 @@ export const WinCelebrationModal: React.FC<WinCelebrationModalProps> = ({
         {/* Luminous Background Radial Halo */}
         <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-80 h-80 bg-amber-500/25 rounded-full blur-3xl pointer-events-none" />
 
-        {/* --- DYNAMIC VARIANT SELECTOR TABS --- */}
-        <div className="relative z-30 mb-2.5 w-full flex flex-col items-center gap-1.5">
-          <div className="text-[9px] sm:text-[10px] font-cinzel text-amber-400/80 uppercase font-bold tracking-widest">
-            Estilos de Celebración Casino 4K 60FPS:
-          </div>
-          <div className="grid grid-cols-3 gap-1.5 w-full bg-black/80 p-1.5 rounded-2xl border border-amber-500/40 shadow-inner">
-            {/* Variant 1 Button */}
-            <button
-              id="btn-variant-1"
-              onClick={() => {
-                setActiveVariant('VARIANT_1');
-                setDisplayAmount(0);
-              }}
-              className={`py-1 px-1.5 rounded-xl font-cinzel font-bold text-[9px] sm:text-xs transition-all flex flex-col items-center justify-center gap-0.5 ${
-                activeVariant === 'VARIANT_1'
-                  ? 'bg-gradient-to-r from-cyan-600 via-blue-500 to-cyan-400 text-white shadow-[0_0_15px_rgba(6,182,212,0.8)] scale-[1.02]'
-                  : 'text-stone-300 hover:text-cyan-200 hover:bg-stone-900'
-              }`}
-            >
-              <div className="flex items-center gap-1">
-                <Sparkles className="w-3 h-3 text-cyan-300" />
-                <span className="truncate">V1: Luces</span>
-              </div>
-              <span className="text-[7px] sm:text-[8px] opacity-75 font-sans uppercase">Light Explosion</span>
-            </button>
-
-            {/* Variant 2 Button */}
-            <button
-              id="btn-variant-2"
-              onClick={() => {
-                setActiveVariant('VARIANT_2');
-                setDisplayAmount(0);
-              }}
-              className={`py-1 px-1.5 rounded-xl font-cinzel font-bold text-[9px] sm:text-xs transition-all flex flex-col items-center justify-center gap-0.5 ${
-                activeVariant === 'VARIANT_2'
-                  ? 'bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-400 text-stone-950 shadow-[0_0_15px_rgba(251,191,36,0.8)] scale-[1.02]'
-                  : 'text-stone-300 hover:text-amber-200 hover:bg-stone-900'
-              }`}
-            >
-              <div className="flex items-center gap-1">
-                <Coins className="w-3 h-3 text-yellow-300" />
-                <span className="truncate">V2: Lluvia</span>
-              </div>
-              <span className="text-[7px] sm:text-[8px] opacity-75 font-sans uppercase">Coin Rain</span>
-            </button>
-
-            {/* Variant 3 Button */}
-            <button
-              id="btn-variant-3"
-              onClick={() => {
-                setActiveVariant('VARIANT_3');
-                setDisplayAmount(0);
-              }}
-              className={`py-1 px-1.5 rounded-xl font-cinzel font-bold text-[9px] sm:text-xs transition-all flex flex-col items-center justify-center gap-0.5 ${
-                activeVariant === 'VARIANT_3'
-                  ? 'bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-300 text-stone-950 shadow-[0_0_20px_rgba(251,191,36,0.95)] scale-[1.02] animate-pulse'
-                  : 'text-stone-300 hover:text-yellow-200 hover:bg-stone-900'
-              }`}
-            >
-              <div className="flex items-center gap-1">
-                <Flame className="w-3.5 h-3.5 text-amber-300" />
-                <span className="truncate font-black">V3: MEGA</span>
-              </div>
-              <span className="text-[7px] sm:text-[8px] opacity-75 font-sans uppercase">Epic Jackpot</span>
-            </button>
-          </div>
+        {/* One celebration card is selected randomly for each prize. */}
+        <div className="relative z-30 mb-2.5 text-[9px] sm:text-[10px] font-cinzel text-amber-400/80 uppercase font-bold tracking-widest">
+          Celebración sorpresa
         </div>
 
         {/* --- VARIANT 3 GIANT GLOWING "MEGA" TEXT --- */}
