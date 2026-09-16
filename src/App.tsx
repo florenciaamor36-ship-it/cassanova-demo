@@ -18,6 +18,7 @@ import { haptic } from './utils/haptics';
 import templeBg from './assets/images/cleopatra_temple_bg_1789482734602.jpg';
 import slotFrameImg from './assets/images/cleopatra_slot_frame_1789482747217.jpg';
 import cleopatraRecliningImg from './assets/images/cleopatra_mobile_reclining_transparent.png';
+import cleopatraDesktopLeftImg from './assets/images/cleopatra_desktop_left_transparent.png';
 
 const STORAGE_KEYS = {
   BALANCE: 'cleopatra_slot_balance',
@@ -364,6 +365,16 @@ export default function App() {
 
       {/* Central Slot Stage - With Desktop Wings and Mobile Full-Bleed layout */}
       <main className="flex-1 min-h-0 w-full flex items-center justify-center px-1 sm:px-2 py-0.5 z-10 overflow-hidden gap-2">
+        {/* Cleopatra decorative artwork: desktop only, kept outside the game controls. */}
+        <div className="hidden lg:flex w-28 xl:w-40 2xl:w-48 h-full max-h-[520px] items-end justify-center shrink-0 pointer-events-none">
+          <img
+            src={cleopatraDesktopLeftImg}
+            alt="Cleopatra de pie"
+            className="w-full h-full max-h-[500px] object-contain object-bottom drop-shadow-[0_8px_18px_rgba(0,0,0,0.85)]"
+            referrerPolicy="no-referrer"
+          />
+        </div>
+
         {/* Center Column: Jackpots + Reel Cabinet + Dynamic Ticker */}
         <div className="flex-1 min-w-0 max-w-[820px] h-full flex flex-col items-center justify-between py-0.5">
           {/* Progressive Jackpots Bar (Mini, Major, Grand - Interactive Celebration Triggers) */}
