@@ -476,7 +476,7 @@ export default function App() {
 
       </main>
 
-      {/* Bottom Rigid Control Console (Thumb-Zone & Ergonomics) */
+      {/* Bottom Rigid Control Console (Thumb-Zone & Ergonomics) */}
       <div className="shrink-0 z-20 relative overflow-visible">
         <SlotControls
           currentBet={currentBet}
