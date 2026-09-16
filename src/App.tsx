@@ -19,6 +19,7 @@ import templeBg from './assets/images/cleopatra_temple_bg_1789482734602.jpg';
 import slotFrameImg from './assets/images/cleopatra_slot_frame_1789482747217.jpg';
 import cleopatraRecliningImg from './assets/images/cleopatra_mobile_reclining_transparent.png';
 import cleopatraDesktopLeftImg from './assets/images/cleopatra_desktop_final.png';
+import anubisDesktopRightImg from './assets/images/anubis_desktop_right.png';
 
 const STORAGE_KEYS = {
   BALANCE: 'cleopatra_slot_balance',
@@ -463,9 +464,19 @@ export default function App() {
           </div>
         </div>
 
+        {/* Anubis decorative artwork: desktop only, absolutely positioned so the reels remain centered. */}
+        <div className="hidden lg:flex absolute right-1 xl:right-4 2xl:right-10 top-1/2 -translate-y-1/2 w-32 xl:w-44 2xl:w-52 h-[78%] max-h-[520px] items-center justify-center pointer-events-none">
+          <img
+            src={anubisDesktopRightImg}
+            alt="Anubis guardián"
+            className="w-full h-full object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.9)]"
+            referrerPolicy="no-referrer"
+          />
+        </div>
+
       </main>
 
-      {/* Bottom Rigid Control Console (Thumb-Zone & Ergonomics) */}
+      {/* Bottom Rigid Control Console (Thumb-Zone & Ergonomics) */
       <div className="shrink-0 z-20 relative overflow-visible">
         <SlotControls
           currentBet={currentBet}
