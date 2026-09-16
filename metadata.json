@@ -1,0 +1,6 @@
+{
+  "name": "Cleopatra Gold Casino Slot",
+  "description": "Professional 5-reel Cleopatra themed casino slot machine with PixiJS 60 FPS animations, realistic RNG, immersive Egyptian audio, bonus free spins, and player dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

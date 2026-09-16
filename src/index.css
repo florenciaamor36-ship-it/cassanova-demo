@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    user-select: none;
+    background-color: #060408;
+    color: #fef3c7;
+  }
+  h1, h2, h3, .font-cinzel {
+    font-family: 'Cinzel', serif;
+  }
+  .font-decorative {
+    font-family: 'Cinzel Decorative', serif;
+  }
+}
+
+/* Luxury Gold & Egyptian Glow Utilities */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #fff2a3 0%, #ffd700 30%, #e6ac00 65%, #ffea78 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gold-metallic {
+  background: linear-gradient(180deg, #ffffff 0%, #ffd700 35%, #b38700 70%, #fff099 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-border {
+  border: 1px solid rgba(217, 162, 42, 0.45);
+  box-shadow: 0 0 15px rgba(217, 162, 42, 0.15), inset 0 0 10px rgba(217, 162, 42, 0.1);
+}
+
+.gold-glow {
+  box-shadow: 0 0 25px rgba(234, 179, 8, 0.4);
+}
+
+.gold-glow-intense {
+  box-shadow: 0 0 40px rgba(251, 191, 36, 0.7), inset 0 0 20px rgba(251, 191, 36, 0.4);
+}
+
+.btn-gold {
+  background: linear-gradient(180deg, #ffe580 0%, #dfa015 45%, #966102 85%, #593901 100%);
+  border: 1px solid #ffea80;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.6), 0 0 12px rgba(245, 158, 11, 0.4);
+  color: #1a0f00;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-gold:hover:not(:disabled) {
+  background: linear-gradient(180deg, #fff0a6 0%, #f0b020 45%, #ab6e02 85%, #6e4702 100%);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.8), 0 0 20px rgba(245, 158, 11, 0.6);
+  transform: translateY(-1px);
+}
+
+.btn-gold:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.btn-gold:disabled {
+  background: linear-gradient(180deg, #595244 0%, #3a3429 100%);
+  border-color: #554e41;
+  color: #8c8374;
+  text-shadow: none;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.spin-lever-shadow {
+  filter: drop-shadow(0 0 25px rgba(245, 158, 11, 0.6));
+}
+
+/* Custom Egyptian scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0d0912;
+}
+::-webkit-scrollbar-thumb {
+  background: #785a21;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b58933;
+}
+
+/* Mobile Performance Optimizations & Hardware Acceleration */
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  touch-action: manipulation; /* Eliminates 300ms double-tap delay on mobile browsers */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* GPU Hardware Layering for Reels & Animation Canvas */
+.hardware-accelerated {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Optimized backdrop filters on mobile to prevent GPU fill-rate stalls */
+@media (max-width: 768px) {
+  .mobile-optimized-backdrop {
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+  }
+}
+
