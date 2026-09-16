@@ -6,7 +6,6 @@ import { PaytableModal } from './components/PaytableModal';
 import { DashboardDrawer } from './components/DashboardDrawer';
 import { WinCelebrationModal, CelebrationType } from './components/WinCelebrationModal';
 import { JackpotBanners } from './components/JackpotBanners';
-import { DesktopLeftWing, DesktopRightWing } from './components/DesktopWings';
 import { DynamicTicker } from './components/DynamicTicker';
 import { PharaohChestBonusModal } from './components/PharaohChestBonusModal';
 import { LoadingScreen } from './components/LoadingScreen';
@@ -365,9 +364,6 @@ export default function App() {
 
       {/* Central Slot Stage - With Desktop Wings and Mobile Full-Bleed layout */}
       <main className="flex-1 min-h-0 w-full flex items-center justify-center px-1 sm:px-2 py-0.5 z-10 overflow-hidden gap-2">
-        {/* Left Wing on Desktop Screens (Quick Paytable in real-time) */}
-        <DesktopLeftWing currentBet={currentBet} activeWins={activeWins} />
-
         {/* Center Column: Jackpots + Reel Cabinet + Dynamic Ticker */}
         <div className="flex-1 min-w-0 max-w-[820px] h-full flex flex-col items-center justify-between py-0.5">
           {/* Progressive Jackpots Bar (Mini, Major, Grand - Interactive Celebration Triggers) */}
@@ -456,8 +452,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* Right Wing on Desktop Screens (Live Session Stats & Recent Spins Feed) */}
-        <DesktopRightWing stats={stats} history={history} />
       </main>
 
       {/* Bottom Rigid Control Console (Thumb-Zone & Ergonomics) */}
