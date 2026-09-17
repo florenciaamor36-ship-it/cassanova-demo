@@ -71,12 +71,12 @@ export const SlotMachine: React.FC = () => {
 
   // --- Cursor Ambient Fog Canvas Refs ---
   const fogCanvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
+  const mousePosRef = useRef({ x: -1000, y: -1000 });
 
   // Update mouse position for candle halo tracking
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
+      mousePosRef.current = { x: e.clientX, y: e.clientY };
     };
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
@@ -89,6 +89,11 @@ export const SlotMachine: React.FC = () => {
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+
+    const lowPowerDevice = window.matchMedia('(pointer: coarse)').matches
+      || window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      || ('connection' in navigator && (navigator as any).connection?.saveData === true);
+    if (lowPowerDevice) return;
 
     let animId: number;
     let fogs: Array<{
@@ -150,7 +155,7 @@ export const SlotMachine: React.FC = () => {
       });
 
       // 2. Draw gothic candlelit halo shadowing following the cursor
-      if (mousePos.x !== -1000) {
+      if (mousePosRef.current.x !== -1000) {
         ctx.save();
         // Draw dark vignette mask across full viewport
         ctx.fillStyle = 'rgba(0, 0, 0, 0.45)'; // Base darkness overlay
@@ -162,26 +167,26 @@ export const SlotMachine: React.FC = () => {
         const r2 = 280 + flicker;
 
         ctx.globalCompositeOperation = 'destination-out';
-        const spotlightGrad = ctx.createRadialGradient(mousePos.x, mousePos.y, r1, mousePos.x, mousePos.y, r2);
+        const spotlightGrad = ctx.createRadialGradient(mousePosRef.current.x, mousePosRef.current.y, r1, mousePosRef.current.x, mousePosRef.current.y, r2);
         spotlightGrad.addColorStop(0, 'rgba(0, 0, 0, 1)'); // completely see-through
         spotlightGrad.addColorStop(0.4, 'rgba(0, 0, 0, 0.7)');
         spotlightGrad.addColorStop(1, 'rgba(0, 0, 0, 0)'); // fully masked
 
         ctx.fillStyle = spotlightGrad;
         ctx.beginPath();
-        ctx.arc(mousePos.x, mousePos.y, r2, 0, Math.PI * 2);
+        ctx.arc(mousePosRef.current.x, mousePosRef.current.y, r2, 0, Math.PI * 2);
         ctx.fill();
 
         // Overlay a faint warm amber tint inside the spotlight
         ctx.globalCompositeOperation = 'source-over';
-        const amberGrad = ctx.createRadialGradient(mousePos.x, mousePos.y, r1, mousePos.x, mousePos.y, r2);
+        const amberGrad = ctx.createRadialGradient(mousePosRef.current.x, mousePosRef.current.y, r1, mousePosRef.current.x, mousePosRef.current.y, r2);
         amberGrad.addColorStop(0, 'rgba(217, 119, 6, 0.08)'); // subtle warm yellow
         amberGrad.addColorStop(0.5, 'rgba(127, 29, 29, 0.03)'); // subtle red fade
         amberGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
         ctx.fillStyle = amberGrad;
         ctx.beginPath();
-        ctx.arc(mousePos.x, mousePos.y, r2, 0, Math.PI * 2);
+        ctx.arc(mousePosRef.current.x, mousePosRef.current.y, r2, 0, Math.PI * 2);
         ctx.fill();
 
         ctx.restore();
@@ -202,7 +207,7 @@ export const SlotMachine: React.FC = () => {
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', resize);
     };
-  }, [mousePos]);
+  }, []);
 
   // Lazy-unlock the audio context on first click
   useEffect(() => {

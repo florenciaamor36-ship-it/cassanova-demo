@@ -126,7 +126,7 @@ export const SymbolRenderer: React.FC<SymbolRendererProps> = ({ symbolId, isWinn
           alt={symbol.name}
           referrerPolicy="no-referrer"
           className="w-full h-full object-cover rounded-xl transition-transform duration-300 pointer-events-none"
-          loading="eager"
+          loading="lazy"
         />
 
         {/* Ambient Dark Corner Vignette on image */}

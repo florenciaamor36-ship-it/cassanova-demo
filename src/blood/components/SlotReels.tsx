@@ -53,6 +53,10 @@ export const SlotReels: React.FC<SlotReelsProps> = ({
 
     canvas.width = dimensions.width;
     canvas.height = dimensions.height;
+    if (isSpinning || winningLines.length === 0) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      return;
+    }
 
     let animationId: number;
     let particles: Array<{
@@ -101,15 +105,17 @@ export const SlotReels: React.FC<SlotReelsProps> = ({
             winLine.coords.forEach(([col, row]) => {
               const center = getCellCenter(col, row);
               if (Math.random() < 0.2) {
-                particles.push({
-                  x: center.x + (Math.random() - 0.5) * cellWidth * 0.6,
-                  y: center.y + (Math.random() - 0.5) * cellHeight * 0.6,
-                  vx: (Math.random() - 0.5) * 1,
-                  vy: -Math.random() * 1.5 - 0.5,
-                  color: winLine.lineId === 100 ? '#10b981' : '#f43f5e', // Emerald for bonus, crimson for scatter
-                  size: Math.random() * 3 + 2,
-                  alpha: 1
-                });
+                if (particles.length < 80) {
+                  particles.push({
+                    x: center.x + (Math.random() - 0.5) * cellWidth * 0.6,
+                    y: center.y + (Math.random() - 0.5) * cellHeight * 0.6,
+                    vx: (Math.random() - 0.5) * 1,
+                    vy: -Math.random() * 1.5 - 0.5,
+                    color: winLine.lineId === 100 ? '#10b981' : '#f43f5e', // Emerald for bonus, crimson for scatter
+                    size: Math.random() * 3 + 2,
+                    alpha: 1
+                  });
+                }
               }
 
               // Draw neon outline box
@@ -161,15 +167,17 @@ export const SlotReels: React.FC<SlotReelsProps> = ({
               
               // Interpolate
               const t = Math.random();
-              particles.push({
-                x: start.x + (end.x - start.x) * t,
-                y: start.y + (end.y - start.y) * t,
-                vx: (Math.random() - 0.5) * 1.5,
-                vy: (Math.random() - 0.5) * 1.5 - 0.5,
-                color: lineColor,
-                size: Math.random() * 3 + 1.5,
-                alpha: 1
-              });
+              if (particles.length < 80) {
+                particles.push({
+                  x: start.x + (end.x - start.x) * t,
+                  y: start.y + (end.y - start.y) * t,
+                  vx: (Math.random() - 0.5) * 1.5,
+                  vy: (Math.random() - 0.5) * 1.5 - 0.5,
+                  color: lineColor,
+                  size: Math.random() * 3 + 1.5,
+                  alpha: 1
+                });
+              }
             }
 
             // Draw individual cell highlights for winning count
@@ -227,14 +235,15 @@ export const SlotReels: React.FC<SlotReelsProps> = ({
       }
 
       // Update and draw sparkles
-      particles.forEach((p, idx) => {
+      for (let idx = particles.length - 1; idx >= 0; idx--) {
+        const p = particles[idx];
         p.x += p.vx;
         p.y += p.vy;
         p.alpha -= 0.02;
 
         if (p.alpha <= 0) {
           particles.splice(idx, 1);
-          return;
+          continue;
         }
 
         ctx.save();
@@ -246,7 +255,7 @@ export const SlotReels: React.FC<SlotReelsProps> = ({
         ctx.shadowColor = p.color;
         ctx.fill();
         ctx.restore();
-      });
+      }
 
       animationId = requestAnimationFrame(drawLoop);
     };
