@@ -94,7 +94,7 @@ const SYMBOL_ASSETS: Record<string, { src: string; name: string; glow: string; b
   }
 };
 
-export const SymbolRenderer: React.FC<SymbolRendererProps> = ({ symbolId, isWinning = false }) => {
+export const SymbolRenderer = React.memo(({ symbolId, isWinning = false }: SymbolRendererProps) => {
   const symbol = SYMBOL_ASSETS[symbolId];
 
   if (!symbol) {
@@ -145,6 +145,6 @@ export const SymbolRenderer: React.FC<SymbolRendererProps> = ({ symbolId, isWinn
       </div>
     </div>
   );
-};
+});
 
 export default SymbolRenderer;

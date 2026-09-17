@@ -501,4 +501,4 @@ export const SlotReels: React.FC<SlotReelsProps> = ({
     </div>
   );
 };
-export default SlotReels;
+export default React.memo(SlotReels);
