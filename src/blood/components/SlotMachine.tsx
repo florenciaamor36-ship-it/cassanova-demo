@@ -72,6 +72,20 @@ export const SlotMachine: React.FC = () => {
   // --- Cursor Ambient Fog Canvas Refs ---
   const fogCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const mousePosRef = useRef({ x: -1000, y: -1000 });
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const schedule = (callback: () => void, delay: number) => {
+    const timer = setTimeout(() => {
+      timersRef.current = timersRef.current.filter(id => id !== timer);
+      callback();
+    }, delay);
+    timersRef.current.push(timer);
+    return timer;
+  };
+
+  useEffect(() => () => {
+    timersRef.current.forEach(clearTimeout);
+    timersRef.current = [];
+  }, []);
 
   // Update mouse position for candle halo tracking
   useEffect(() => {
@@ -241,7 +255,7 @@ export const SlotMachine: React.FC = () => {
     if (isSpinning || isFreeSpinsActive) return;
     setBetIdx(BETS_LIST.length - 1); // Selects final index (e.g. $1000)
     // Auto trigger spin on max bet to feel arcade-like!
-    setTimeout(() => {
+    schedule(() => {
       triggerSpin();
     }, 100);
   };
@@ -295,7 +309,7 @@ export const SlotMachine: React.FC = () => {
     
     // Staggered stops: each reel stops incrementally
     for (let reelIdx = 0; reelIdx < 5; reelIdx++) {
-      setTimeout(() => {
+      schedule(() => {
         setSpinningReels(prev => {
           const updated = [...prev];
           updated[reelIdx] = false;
@@ -382,14 +396,14 @@ export const SlotMachine: React.FC = () => {
         AudioEngine.playBonus();
         setWinAnnouncement('⚰️ ¡ATAÚDES BONUS ALINEADOS! Abriendo la cripta...');
         setIsAutoPlaying(false);
-        setTimeout(() => setIsBonusActive(true), 600);
+        schedule(() => setIsBonusActive(true), 600);
       } else {
         // If no bonus, cycle winning paylines or handle auto spin looping
         if (isFreeSpinsActive) {
           handleFreeSpinsStep();
         } else if (isAutoPlaying) {
           // Continue Auto Spin loop
-          setTimeout(() => {
+          schedule(() => {
             triggerSpin();
           }, isTurbo ? 600 : 1500);
         }
@@ -460,7 +474,7 @@ export const SlotMachine: React.FC = () => {
 
       if (nextSpins === 0) {
         // End of Free Spins cascade
-        setTimeout(() => {
+        schedule(() => {
           setWinAnnouncement(`🧛 TIROS GRATIS COMPLETADOS: +$${freeSpinsWinAccum}`);
           setCredits(prev => prev + freeSpinsWinAccum);
           setLastWin(freeSpinsWinAccum);
@@ -468,12 +482,12 @@ export const SlotMachine: React.FC = () => {
           setIsFreeSpinsActive(false);
           
           if (isAutoPlaying) {
-            setTimeout(() => triggerSpin(), 1500);
+            schedule(() => triggerSpin(), 1500);
           }
         }, 1200);
       } else {
         // Schedule next free spin automáticamente!
-        setTimeout(() => {
+        schedule(() => {
           triggerSpin();
         }, isTurbo ? 800 : 1800);
       }
