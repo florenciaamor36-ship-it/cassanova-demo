@@ -118,3 +118,65 @@ html, body, #root {
   }
 }
 
+
+
+/* Blood Covenant Gothic Slots theme */
+
+
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  overscroll-behavior-y: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+@layer utilities {
+  .font-cinzel {
+    font-family: 'Cinzel', Georgia, serif;
+  }
+  .font-cinzel-dec {
+    font-family: 'Cinzel Decorative', Georgia, serif;
+  }
+  .font-gothic {
+    font-family: 'MedievalSharp', Impact, serif;
+  }
+  .font-sans {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+}
+
+/* Custom scrollbars for modals */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0d0101;
+}
+::-webkit-scrollbar-thumb {
+  background: #450a0a;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #7f1d1d;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes reelSpin {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
