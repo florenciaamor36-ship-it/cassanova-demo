@@ -46,6 +46,7 @@ export const SlotMachine: React.FC = () => {
   // --- Modals Toggle ---
   const [isPaytableOpen, setIsPaytableOpen] = useState<boolean>(false);
   const [isCelebrationOpen, setIsCelebrationOpen] = useState<boolean>(false);
+  const celebrationOpenRef = useRef(false);
   const [celebrationType, setCelebrationType] = useState<'lights' | 'rain' | 'grand'>('lights');
   const [lastCelebrationType, setLastCelebrationType] = useState<'lights' | 'rain' | 'grand' | ''>('');
   
@@ -86,6 +87,10 @@ export const SlotMachine: React.FC = () => {
     timersRef.current.forEach(clearTimeout);
     timersRef.current = [];
   }, []);
+
+  useEffect(() => {
+    celebrationOpenRef.current = isCelebrationOpen;
+  }, [isCelebrationOpen]);
 
   // Update mouse position for candle halo tracking
   useEffect(() => {
@@ -371,7 +376,7 @@ export const SlotMachine: React.FC = () => {
         // Wait for celebration to close
         await new Promise<void>((resolve) => {
           const checkModalClosed = setInterval(() => {
-            if (!isCelebrationOpen) {
+            if (!celebrationOpenRef.current) {
               clearInterval(checkModalClosed);
               resolve();
             }
