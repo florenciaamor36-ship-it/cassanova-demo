@@ -10,6 +10,9 @@ import { CoffinBonusModal } from './CoffinBonusModal';
 import { DraculaWheelModal } from './DraculaWheelModal';
 import { GambleCardModal } from './GambleCardModal';
 import { Volume2, VolumeX, ShieldCheck, Flame, Moon, Compass, Gift, Trophy, Disc } from 'lucide-react';
+import castleBgImg from '../assets/images/gothic_castle_bg_1789671734060.webp';
+import lordPortraitImg from '../assets/images/vampire_lord_portrait_1789671748955.webp';
+import countessPortraitImg from '../assets/images/vampire_countess_portrait_1789671766123.webp';
 
 export const SlotMachine: React.FC = () => {
   // --- Game Core States ---
@@ -506,7 +509,7 @@ export const SlotMachine: React.FC = () => {
       {/* Background Underlay - Generated Luxurious Gothic Castle */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none filter brightness-50 contrast-125 z-0"
-        style={{ backgroundImage: `url('/src/assets/images/gothic_castle_bg_1789671734060.webp')` }}
+        style={{ backgroundImage: `url(${castleBgImg})` }}
       />
 
       {/* Atmospheric Fog, Vignette & Candle Spotlight Layer */}
@@ -564,13 +567,13 @@ export const SlotMachine: React.FC = () => {
         {/* Left Side: Absolute Character Overlay (Vampire Lord) - Hidden on mobile, pristine on wide desktop */}
         <div 
           className="hidden xl:block absolute left-4 bottom-24 w-60 h-80 bg-cover bg-center rounded-xl border border-red-900/40 shadow-2xl filter brightness-75 hover:brightness-100 transition-all pointer-events-none"
-          style={{ backgroundImage: `url('/src/assets/images/vampire_lord_portrait_1789671748955.webp')` }}
+          style={{ backgroundImage: `url(${lordPortraitImg})` }}
         />
 
         {/* Right Side: Absolute Character Overlay (Vampire Countess) - Hidden on mobile, pristine on wide desktop */}
         <div 
           className="hidden xl:block absolute right-4 bottom-24 w-60 h-80 bg-cover bg-center rounded-xl border border-red-900/40 shadow-2xl filter brightness-75 hover:brightness-100 transition-all pointer-events-none"
-          style={{ backgroundImage: `url('/src/assets/images/vampire_countess_portrait_1789671766123.webp')` }}
+          style={{ backgroundImage: `url(${countessPortraitImg})` }}
         />
 
         {/* CENTER SLOT CABIN */}
