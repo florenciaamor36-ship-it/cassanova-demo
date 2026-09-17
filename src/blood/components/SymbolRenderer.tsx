@@ -1,18 +1,18 @@
 import React from 'react';
 
 // Photorealistic 3D slot symbol assets generated with Gemini
-import vampireLordImg from '../assets/images/symbol_vampire_lord_1789672331451.jpg';
-import vampireCountessImg from '../assets/images/symbol_vampire_countess_1789672341596.jpg';
-import wildFangsImg from '../assets/images/symbol_wild_fangs_1789672353099.jpg';
-import scatterMoonImg from '../assets/images/symbol_scatter_moon_1789672362883.jpg';
-import bonusCoffinImg from '../assets/images/symbol_bonus_coffin_1789672373585.jpg';
-import bloodChaliceImg from '../assets/images/symbol_blood_chalice_1789672383843.jpg';
-import gothicCastleImg from '../assets/images/symbol_gothic_castle_1789672392637.jpg';
-import gothicBatImg from '../assets/images/symbol_gothic_bat_1789672402943.jpg';
-import gothicAceImg from '../assets/images/symbol_gothic_ace_1789672414316.jpg';
-import gothicKingImg from '../assets/images/symbol_gothic_king_1789672425055.jpg';
-import gothicQueenImg from '../assets/images/symbol_gothic_queen_1789672435130.jpg';
-import gothicJackImg from '../assets/images/symbol_gothic_jack_1789672445720.jpg';
+import vampireLordImg from '../assets/images/symbol_vampire_lord_1789672331451.webp';
+import vampireCountessImg from '../assets/images/symbol_vampire_countess_1789672341596.webp';
+import wildFangsImg from '../assets/images/symbol_wild_fangs_1789672353099.webp';
+import scatterMoonImg from '../assets/images/symbol_scatter_moon_1789672362883.webp';
+import bonusCoffinImg from '../assets/images/symbol_bonus_coffin_1789672373585.webp';
+import bloodChaliceImg from '../assets/images/symbol_blood_chalice_1789672383843.webp';
+import gothicCastleImg from '../assets/images/symbol_gothic_castle_1789672392637.webp';
+import gothicBatImg from '../assets/images/symbol_gothic_bat_1789672402943.webp';
+import gothicAceImg from '../assets/images/symbol_gothic_ace_1789672414316.webp';
+import gothicKingImg from '../assets/images/symbol_gothic_king_1789672425055.webp';
+import gothicQueenImg from '../assets/images/symbol_gothic_queen_1789672435130.webp';
+import gothicJackImg from '../assets/images/symbol_gothic_jack_1789672445720.webp';
 
 interface SymbolRendererProps {
   symbolId: string;

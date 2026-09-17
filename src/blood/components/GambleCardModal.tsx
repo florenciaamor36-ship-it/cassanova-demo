@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Flame, ShieldAlert, Sparkles, CheckCircle2, XCircle } from 'lucide-react';
 import { AudioEngine } from '../utils/AudioController';
-import tarotImg from '../assets/images/gamble_cards_tarot_1789672931692.jpg';
-import vampireLordImg from '../assets/images/symbol_vampire_lord_1789672331451.jpg';
-import vampireCountessImg from '../assets/images/symbol_vampire_countess_1789672341596.jpg';
+import tarotImg from '../assets/images/gamble_cards_tarot_1789672931692.webp';
+import vampireLordImg from '../assets/images/symbol_vampire_lord_1789672331451.webp';
+import vampireCountessImg from '../assets/images/symbol_vampire_countess_1789672341596.webp';
 
 interface GambleCardModalProps {
   isOpen: boolean;

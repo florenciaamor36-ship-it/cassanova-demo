@@ -3,12 +3,12 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Shield, Sparkles, HelpCircle, Gift } from 'lucide-react';
 import { AudioEngine } from '../utils/AudioController';
 
-import bonusCoffinImg from '../assets/images/symbol_bonus_coffin_1789672373585.jpg';
-import vampireLordImg from '../assets/images/symbol_vampire_lord_1789672331451.jpg';
-import bloodChaliceImg from '../assets/images/symbol_blood_chalice_1789672383843.jpg';
-import gothicKingImg from '../assets/images/symbol_gothic_king_1789672425055.jpg';
-import gothicAceImg from '../assets/images/symbol_gothic_ace_1789672414316.jpg';
-import gothicBatImg from '../assets/images/symbol_gothic_bat_1789672402943.jpg';
+import bonusCoffinImg from '../assets/images/symbol_bonus_coffin_1789672373585.webp';
+import vampireLordImg from '../assets/images/symbol_vampire_lord_1789672331451.webp';
+import bloodChaliceImg from '../assets/images/symbol_blood_chalice_1789672383843.webp';
+import gothicKingImg from '../assets/images/symbol_gothic_king_1789672425055.webp';
+import gothicAceImg from '../assets/images/symbol_gothic_ace_1789672414316.webp';
+import gothicBatImg from '../assets/images/symbol_gothic_bat_1789672402943.webp';
 
 interface CoffinBonusModalProps {
   isOpen: boolean;

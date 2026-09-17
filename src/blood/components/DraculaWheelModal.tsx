@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, Trophy, Flame, Disc, X } from 'lucide-react';
 import { AudioEngine } from '../utils/AudioController';
-import bloodWheelImg from '../assets/images/dracula_blood_wheel_1789672919148.jpg';
+import bloodWheelImg from '../assets/images/dracula_blood_wheel_1789672919148.webp';
 
 interface WheelSegment {
   id: number;
