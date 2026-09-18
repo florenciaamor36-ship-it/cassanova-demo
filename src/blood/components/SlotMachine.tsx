@@ -566,12 +566,6 @@ export const SlotMachine: React.FC = () => {
                 Tiros Gratis
               </button>
               <button
-                onClick={() => { setSelectedPreset('bonus_coffins'); setWinAnnouncement('PRESET: Cripta Bonus preparado!'); }}
-                className="px-1.5 sm:px-2 py-0.5 sm:py-1 text-[9px] sm:text-[10px] bg-emerald-950/60 border border-emerald-900 text-emerald-400 font-bold hover:bg-emerald-900 hover:text-white rounded transition-colors active:scale-95"
-              >
-                Cripta
-              </button>
-              <button
                 onClick={() => { setSelectedPreset('mixed_wilds'); setWinAnnouncement('PRESET: Mixed Wilds preparado!'); }}
                 className="px-1.5 sm:px-2 py-0.5 sm:py-1 text-[9px] sm:text-[10px] bg-yellow-950/60 border border-yellow-900 text-yellow-400 font-bold hover:bg-yellow-900 hover:text-white rounded transition-colors active:scale-95"
               >
