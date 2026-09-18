@@ -299,7 +299,7 @@ export const SlotMachine: React.FC = () => {
 
     // Timeline staggered stops
     // Give the reels a longer, more suspenseful cadence without blocking the UI.
-    const baseStopDelay = isTurbo ? 400 : 700;
+    const baseStopDelay = isTurbo ? 320 : 520;
     
     // Staggered stops: each reel stops incrementally
     for (let reelIdx = 0; reelIdx < 5; reelIdx++) {
@@ -352,7 +352,7 @@ export const SlotMachine: React.FC = () => {
       // This gives the player time to read the paylines and highlighted symbols.
       if (triggerCelebration) {
         setWinAnnouncement(`LÍNEAS GANADORAS: $${evaluated.totalWin}`);
-        await new Promise<void>((resolve) => schedule(resolve, 2200));
+        await new Promise<void>((resolve) => schedule(resolve, 1100));
 
         const types: Array<'lights' | 'rain' | 'grand'> = ['lights', 'rain', 'grand'];
         const filtered = types.filter(t => t !== lastCelebrationType);
@@ -373,7 +373,7 @@ export const SlotMachine: React.FC = () => {
         });
       } else if (hasWinnings) {
         // Normal wins also show the lines before the payout announcement.
-        await new Promise<void>((resolve) => schedule(resolve, 1600));
+        await new Promise<void>((resolve) => schedule(resolve, 800));
         AudioEngine.playWinNormal();
         setWinAnnouncement(`¡Has ganado $${evaluated.totalWin}!`);
       }

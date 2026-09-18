@@ -26,13 +26,17 @@ const SpinCanvas: React.FC<{ spinningReels: boolean[]; isTurbo: boolean; grid: s
     if (!canvas || !anySpinning) return;
     const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    // A 2x backing canvas quadruples fill cost with little visual gain here.
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     const width = canvas.clientWidth;
     const height = canvas.clientHeight;
     canvas.width = Math.max(1, Math.floor(width * dpr));
     canvas.height = Math.max(1, Math.floor(height * dpr));
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const images = new Map<string, HTMLImageElement>();
+    // Build each reel strip once; allocating it inside requestAnimationFrame
+    // caused garbage-collection pauses on weaker phones.
+    const reelStrips = grid.map(col => [...strip, ...col, ...strip]);
     const allIds = Array.from(new Set([...strip, ...grid.flat()]));
     allIds.forEach(id => {
       let img = spinImageCache.get(id);
@@ -54,7 +58,7 @@ const SpinCanvas: React.FC<{ spinningReels: boolean[]; isTurbo: boolean; grid: s
       const elapsed = ((now - started) * speed / 1000) % (strip.length * cellH);
       spinningRef.current.forEach((spinning, col) => {
         if (!spinning) return;
-        const targetStrip = [...strip, ...(grid[col] || []), ...strip];
+        const targetStrip = reelStrips[col] || strip;
         const localOffset = elapsed % (targetStrip.length * cellH);
         for (let i = -1; i <= 4; i++) {
           const index = (i + Math.floor(localOffset / cellH) + col * 2 + targetStrip.length * 10) % targetStrip.length;
