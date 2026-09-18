@@ -19,7 +19,7 @@ interface SymbolRendererProps {
   isWinning?: boolean;
 }
 
-const SYMBOL_ASSETS: Record<string, { src: string; name: string; glow: string; border: string }> = {
+export const SYMBOL_ASSETS: Record<string, { src: string; name: string; glow: string; border: string }> = {
   vampire_lord: {
     src: vampireLordImg,
     name: 'Señor Vlad',

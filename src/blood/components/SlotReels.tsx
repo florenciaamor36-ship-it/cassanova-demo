@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { SYMBOLS, PAYLINES, SymbolDef } from '../data/gameData';
-import { SymbolRenderer } from './SymbolRenderer';
+import { SymbolRenderer, SYMBOL_ASSETS } from './SymbolRenderer';
 import { WinningLine } from '../utils/GameEngine';
 
 interface SlotReelsProps {
@@ -11,6 +11,49 @@ interface SlotReelsProps {
   activeWinningLineIdx: number; // which winning line to highlight (-1 for all or none)
   isTurbo: boolean;
 }
+
+const SpinCanvas: React.FC<{ spinningReels: boolean[]; isTurbo: boolean }> = ({ spinningReels, isTurbo }) => {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const strip = ['vampire_lord', 'gothic_castle', 'blood_chalice', 'wild_fangs', 'vampire_countess', 'scatter_moon', 'bonus_coffin', 'gothic_bat', 'gothic_a', 'gothic_k', 'gothic_q', 'gothic_j'];
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || !spinningReels.some(Boolean)) return;
+    const ctx = canvas.getContext('2d', { alpha: true });
+    if (!ctx) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    canvas.width = Math.max(1, Math.floor(width * dpr));
+    canvas.height = Math.max(1, Math.floor(height * dpr));
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const images = new Map<string, HTMLImageElement>();
+    strip.forEach(id => { const img = new Image(); img.src = SYMBOL_ASSETS[id].src; images.set(id, img); });
+    let frame = 0;
+    const started = performance.now();
+    const draw = (now: number) => {
+      ctx.clearRect(0, 0, width, height);
+      const cellW = width / 5;
+      const cellH = height / 3;
+      const speed = isTurbo ? 900 : 620;
+      const elapsed = ((now - started) * speed / 1000) % (strip.length * cellH);
+      spinningReels.forEach((spinning, col) => {
+        if (!spinning) return;
+        for (let i = -1; i <= 4; i++) {
+          const index = (i + Math.floor(elapsed / cellH) + col * 2 + strip.length * 10) % strip.length;
+          const y = i * cellH - (elapsed % cellH);
+          const img = images.get(strip[index]);
+          if (img && img.complete) ctx.drawImage(img, col * cellW + 4, y + 4, cellW - 8, cellH - 8);
+        }
+      });
+      frame = requestAnimationFrame(draw);
+    };
+    frame = requestAnimationFrame(draw);
+    return () => cancelAnimationFrame(frame);
+  }, [spinningReels, isTurbo]);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 z-15 pointer-events-none" aria-hidden="true" />;
+};
 
 export const SlotReels: React.FC<SlotReelsProps> = ({
   grid,
@@ -280,24 +323,6 @@ export const SlotReels: React.FC<SlotReelsProps> = ({
     );
   };
 
-  // Base symbol sequence for seamless spinning reel animation
-  const BASE_STRIP = [
-    'vampire_lord',
-    'gothic_castle',
-    'blood_chalice',
-    'wild_fangs',
-    'vampire_countess',
-    'scatter_moon',
-    'bonus_coffin',
-    'gothic_bat',
-    'gothic_a',
-    'gothic_k',
-    'gothic_q',
-    'gothic_j'
-  ];
-  // Duplicate for seamless 0% -> -50% loop
-  const SEAMLESS_STRIP = [...BASE_STRIP, ...BASE_STRIP];
-
   const [reelBounces, setReelBounces] = useState<number[]>([0, 0, 0, 0, 0]);
   const prevSpinningRef = useRef<boolean[]>([false, false, false, false, false]);
 
@@ -352,6 +377,8 @@ export const SlotReels: React.FC<SlotReelsProps> = ({
           ))}
         </div>
 
+        <SpinCanvas spinningReels={spinningReels} isTurbo={isTurbo} />
+
         {/* Columns and Reel Tapes */}
         <div className="absolute inset-0 grid grid-cols-5 z-10">
           {grid.map((column, colIdx) => {
@@ -364,26 +391,8 @@ export const SlotReels: React.FC<SlotReelsProps> = ({
                 className="relative h-full overflow-hidden flex flex-col"
               >
                 {isReelSpinning ? (
-                  // Spinning animation: seamless vertical reel tape scrolling infinitely
-                  <div 
-                    className="w-full flex flex-col will-change-transform [backface-visibility:hidden] [contain:layout_paint]"
-                    style={{
-                      height: `${(SEAMLESS_STRIP.length / 3) * 100}%`,
-                      animation: `reelSpin ${isTurbo ? '0.24s' : '0.38s'} linear infinite`,
-                      animationDelay: `${colIdx * 0.05}s`,
-                      backfaceVisibility: 'hidden'
-                    }}
-                  >
-                    {SEAMLESS_STRIP.map((symId, dummyIdx) => (
-                      <div 
-                        key={dummyIdx} 
-                        className="w-full flex items-center justify-center p-1 sm:p-2"
-                        style={{ height: `${100 / SEAMLESS_STRIP.length}%` }}
-                      >
-                        <SymbolRenderer symbolId={symId} />
-                      </div>
-                    ))}
-                  </div>
+                  // Spinning columns are drawn by one compositor-friendly canvas below.
+                  <div className="w-full h-full" aria-hidden="true" />
                 ) : (
                   // Static Result Grid with settling spring bounce
                   <div 
