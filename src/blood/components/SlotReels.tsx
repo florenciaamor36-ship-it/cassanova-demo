@@ -12,6 +12,8 @@ interface SlotReelsProps {
   isTurbo: boolean;
 }
 
+const spinImageCache = new Map<string, HTMLImageElement>();
+
 const SpinCanvas: React.FC<{ spinningReels: boolean[]; isTurbo: boolean }> = ({ spinningReels, isTurbo }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const strip = ['vampire_lord', 'gothic_castle', 'blood_chalice', 'wild_fangs', 'vampire_countess', 'scatter_moon', 'bonus_coffin', 'gothic_bat', 'gothic_a', 'gothic_k', 'gothic_q', 'gothic_j'];
@@ -28,14 +30,23 @@ const SpinCanvas: React.FC<{ spinningReels: boolean[]; isTurbo: boolean }> = ({ 
     canvas.height = Math.max(1, Math.floor(height * dpr));
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const images = new Map<string, HTMLImageElement>();
-    strip.forEach(id => { const img = new Image(); img.src = SYMBOL_ASSETS[id].src; images.set(id, img); });
+    strip.forEach(id => {
+      let img = spinImageCache.get(id);
+      if (!img) {
+        img = new Image();
+        img.decoding = 'async';
+        img.src = SYMBOL_ASSETS[id].src;
+        spinImageCache.set(id, img);
+      }
+      images.set(id, img);
+    });
     let frame = 0;
     const started = performance.now();
     const draw = (now: number) => {
       ctx.clearRect(0, 0, width, height);
       const cellW = width / 5;
       const cellH = height / 3;
-      const speed = isTurbo ? 900 : 620;
+      const speed = isTurbo ? 1800 : 1300;
       const elapsed = ((now - started) * speed / 1000) % (strip.length * cellH);
       spinningReels.forEach((spinning, col) => {
         if (!spinning) return;
@@ -52,7 +63,7 @@ const SpinCanvas: React.FC<{ spinningReels: boolean[]; isTurbo: boolean }> = ({ 
     return () => cancelAnimationFrame(frame);
   }, [spinningReels, isTurbo]);
 
-  return <canvas ref={canvasRef} className="absolute inset-0 z-15 pointer-events-none" aria-hidden="true" />;
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full z-[15] pointer-events-none" aria-hidden="true" />;
 };
 
 export const SlotReels: React.FC<SlotReelsProps> = ({
