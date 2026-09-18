@@ -100,7 +100,7 @@ export const SlotMachine: React.FC = () => {
     const lowPowerDevice = window.matchMedia('(pointer: coarse)').matches
       || window.matchMedia('(prefers-reduced-motion: reduce)').matches
       || ('connection' in navigator && (navigator as any).connection?.saveData === true);
-    if (lowPowerDevice) return;
+    if (lowPowerDevice || isSpinning) return;
 
     let animId: number;
     let fogs: Array<{
@@ -214,7 +214,7 @@ export const SlotMachine: React.FC = () => {
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', resize);
     };
-  }, []);
+  }, [isSpinning]);
 
   // Lazy-unlock the audio context on first click
   useEffect(() => {
