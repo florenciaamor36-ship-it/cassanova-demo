@@ -14,7 +14,7 @@ interface SlotReelsProps {
 
 const spinImageCache = new Map<string, HTMLImageElement>();
 
-const SpinCanvas: React.FC<{ spinningReels: boolean[]; isTurbo: boolean }> = ({ spinningReels, isTurbo }) => {
+const SpinCanvas: React.FC<{ spinningReels: boolean[]; isTurbo: boolean; grid: string[][] }> = ({ spinningReels, isTurbo, grid }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const spinningRef = useRef(spinningReels);
   spinningRef.current = spinningReels;
@@ -33,7 +33,8 @@ const SpinCanvas: React.FC<{ spinningReels: boolean[]; isTurbo: boolean }> = ({ 
     canvas.height = Math.max(1, Math.floor(height * dpr));
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const images = new Map<string, HTMLImageElement>();
-    strip.forEach(id => {
+    const allIds = Array.from(new Set([...strip, ...grid.flat()]));
+    allIds.forEach(id => {
       let img = spinImageCache.get(id);
       if (!img) {
         img = new Image();
@@ -53,10 +54,12 @@ const SpinCanvas: React.FC<{ spinningReels: boolean[]; isTurbo: boolean }> = ({ 
       const elapsed = ((now - started) * speed / 1000) % (strip.length * cellH);
       spinningRef.current.forEach((spinning, col) => {
         if (!spinning) return;
+        const targetStrip = [...strip, ...(grid[col] || []), ...strip];
+        const localOffset = elapsed % (targetStrip.length * cellH);
         for (let i = -1; i <= 4; i++) {
-          const index = (i + Math.floor(elapsed / cellH) + col * 2 + strip.length * 10) % strip.length;
-          const y = i * cellH - (elapsed % cellH);
-          const img = images.get(strip[index]);
+          const index = (i + Math.floor(localOffset / cellH) + col * 2 + targetStrip.length * 10) % targetStrip.length;
+          const y = i * cellH - (localOffset % cellH);
+          const img = images.get(targetStrip[index]);
           if (img && img.complete) ctx.drawImage(img, col * cellW + 4, y + 4, cellW - 8, cellH - 8);
         }
       });
@@ -391,7 +394,7 @@ export const SlotReels: React.FC<SlotReelsProps> = ({
           ))}
         </div>
 
-        <SpinCanvas spinningReels={spinningReels} isTurbo={isTurbo} />
+        <SpinCanvas spinningReels={spinningReels} isTurbo={isTurbo} grid={grid} />
 
         {/* Columns and Reel Tapes */}
         <div className="absolute inset-0 grid grid-cols-5 z-10">
