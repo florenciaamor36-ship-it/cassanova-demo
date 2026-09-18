@@ -298,7 +298,8 @@ export const SlotMachine: React.FC = () => {
     const evaluated = GameEngine.evaluateSpin(finalGrid, currentBet);
 
     // Timeline staggered stops
-    const baseStopDelay = isTurbo ? 250 : 500;
+    // Give the reels a longer, more suspenseful cadence without blocking the UI.
+    const baseStopDelay = isTurbo ? 400 : 700;
     
     // Staggered stops: each reel stops incrementally
     for (let reelIdx = 0; reelIdx < 5; reelIdx++) {
@@ -347,30 +348,32 @@ export const SlotMachine: React.FC = () => {
 
     // Sequence handlers
     const executeSequence = async () => {
-      // 1. If large win celebration is triggered, open celebration
+      // 1. Show the winning lines first, then open the celebration.
+      // This gives the player time to read the paylines and highlighted symbols.
       if (triggerCelebration) {
-        // Decide non-repeating celebration type
+        setWinAnnouncement(`LÍNEAS GANADORAS: $${evaluated.totalWin}`);
+        await new Promise<void>((resolve) => schedule(resolve, 2200));
+
         const types: Array<'lights' | 'rain' | 'grand'> = ['lights', 'rain', 'grand'];
-        // Filter out previous to avoid repeats!
         const filtered = types.filter(t => t !== lastCelebrationType);
         const selected = filtered[Math.floor(Math.random() * filtered.length)];
-        
         setCelebrationType(selected);
         setLastCelebrationType(selected);
         setIsCelebrationOpen(true);
         setWinAnnouncement(`¡GANANCIA ESPECTACULAR DE $${evaluated.totalWin}!`);
 
-        // Wait for celebration to close
+        // Wait for the real modal close before continuing free spins/autoplay.
         await new Promise<void>((resolve) => {
           const checkModalClosed = setInterval(() => {
             if (!celebrationOpenRef.current) {
               clearInterval(checkModalClosed);
               resolve();
             }
-          }, 200);
+          }, 100);
         });
       } else if (hasWinnings) {
-        // Normal win sound
+        // Normal wins also show the lines before the payout announcement.
+        await new Promise<void>((resolve) => schedule(resolve, 1600));
         AudioEngine.playWinNormal();
         setWinAnnouncement(`¡Has ganado $${evaluated.totalWin}!`);
       }
