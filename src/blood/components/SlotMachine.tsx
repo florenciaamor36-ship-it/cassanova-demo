@@ -297,6 +297,11 @@ export const SlotMachine: React.FC = () => {
 
     const evaluated = GameEngine.evaluateSpin(finalGrid, currentBet);
 
+    // Put the final result underneath the canvas immediately. Each reel can
+    // reveal its own real symbols as soon as it stops instead of falling back
+    // to the previous grid and changing all five reels at the end.
+    setGrid(finalGrid);
+
     // Timeline staggered stops
     // Give the reels a longer, more suspenseful cadence without blocking the UI.
     const baseStopDelay = isTurbo ? 320 : 520;
