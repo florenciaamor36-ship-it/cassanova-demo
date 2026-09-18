@@ -6,9 +6,6 @@ import { SlotReels } from './SlotReels';
 import { SlotControls } from './SlotControls';
 import { PaytableModal } from './PaytableModal';
 import { WinCelebrationModal } from './WinCelebrationModal';
-import { CoffinBonusModal } from './CoffinBonusModal';
-import { DraculaWheelModal } from './DraculaWheelModal';
-import { GambleCardModal } from './GambleCardModal';
 import { Volume2, VolumeX, ShieldCheck, Flame, Moon, Compass, Gift, Trophy, Disc } from 'lucide-react';
 import castleBgImg from '../assets/images/gothic_castle_bg_1789671734060.webp';
 import lordPortraitImg from '../assets/images/vampire_lord_portrait_1789671748955.webp';
@@ -54,15 +51,6 @@ export const SlotMachine: React.FC = () => {
   const [isFreeSpinsActive, setIsFreeSpinsActive] = useState<boolean>(false);
   const [freeSpinsLeft, setFreeSpinsLeft] = useState<number>(0);
   const [freeSpinsWinAccum, setFreeSpinsWinAccum] = useState<number>(0);
-
-  // --- Coffin Bonus Picker State ---
-  const [isBonusActive, setIsBonusActive] = useState<boolean>(false);
-
-  // --- Dracula's Blood Wheel Minigame State ---
-  const [isWheelActive, setIsWheelActive] = useState<boolean>(false);
-
-  // --- Gamble (Doble o Nada) State ---
-  const [isGambleActive, setIsGambleActive] = useState<boolean>(false);
 
   // --- Progressive Grand Jackpot Pool ---
   const [jackpotPool, setJackpotPool] = useState<number>(75420);
@@ -340,7 +328,6 @@ export const SlotMachine: React.FC = () => {
 
     const hasWinnings = evaluated.totalWin > 0;
     const isFreeTrigger = evaluated.isFreeSpinsTriggered;
-    const isBonusTrigger = evaluated.isBonusTriggered;
 
     // Save outputs
     setWinningLines(evaluated.winningLines);
@@ -396,78 +383,15 @@ export const SlotMachine: React.FC = () => {
         setFreeSpinsLeft(prev => prev + evaluated.freeSpinsCount);
       }
 
-      // 3. Handle Coffin Bonus Picker triggering
-      if (isBonusTrigger) {
-        AudioEngine.playBonus();
-        setWinAnnouncement('⚰️ ¡ATAÚDES BONUS ALINEADOS! Abriendo la cripta...');
-        setIsAutoPlaying(false);
-        schedule(() => setIsBonusActive(true), 600);
-      } else {
-        // If no bonus, cycle winning paylines or handle auto spin looping
-        if (isFreeSpinsActive) {
-          handleFreeSpinsStep();
-        } else if (isAutoPlaying) {
-          // Continue Auto Spin loop
-          schedule(() => {
-            triggerSpin();
-          }, isTurbo ? 600 : 1500);
-        }
+      // Bonus minigames removed: continue the normal sequence without opening extra games.
+      if (isFreeSpinsActive) {
+        handleFreeSpinsStep();
+      } else if (isAutoPlaying) {
+        schedule(() => { triggerSpin(); }, isTurbo ? 600 : 1500);
       }
     };
 
     executeSequence();
-  };
-
-  // Callback once the coffin bonus is collected and completed
-  const handleCloseBonusPicker = (bonusWon: number) => {
-    setIsBonusActive(false);
-    
-    // Add winnings
-    if (isFreeSpinsActive) {
-      setFreeSpinsWinAccum(prev => prev + bonusWon);
-    } else {
-      setCredits(prev => prev + bonusWon);
-    }
-
-    setLastWin(prev => prev + bonusWon);
-    setWinAnnouncement(`¡Bonus de Cripta otorgado: +$${bonusWon}!`);
-
-    // Resume free spins or auto playing if necessary
-    if (isFreeSpinsActive) {
-      handleFreeSpinsStep();
-    } else {
-      // End of round
-    }
-  };
-
-  // Callback when Dracula's Blood Wheel completes
-  const handleCloseWheel = (result: { winCredits: number; extraFreeSpins: number }) => {
-    setIsWheelActive(false);
-    if (result.winCredits > 0) {
-      setCredits(prev => prev + result.winCredits);
-      setLastWin(result.winCredits);
-      setWinAnnouncement(`¡Rueda de Sangre otorgó $${result.winCredits.toLocaleString()}!`);
-    }
-    if (result.extraFreeSpins > 0) {
-      setIsFreeSpinsActive(true);
-      setFreeSpinsLeft(prev => prev + result.extraFreeSpins);
-      setWinAnnouncement(`¡Rueda de Sangre otorgó +${result.extraFreeSpins} TIROS GRATIS!`);
-    }
-  };
-
-  // Callback when Gamble (Doble o Nada) finishes
-  const handleCloseGamble = (finalWin: number) => {
-    setIsGambleActive(false);
-    if (finalWin > 0) {
-      const difference = finalWin - lastWin;
-      setCredits(prev => prev + difference);
-      setLastWin(finalWin);
-      setWinAnnouncement(`¡Doble o Nada cobrado con éxito: $${finalWin.toLocaleString()}!`);
-    } else {
-      setCredits(prev => Math.max(0, prev - lastWin));
-      setLastWin(0);
-      setWinAnnouncement('Has perdido la apuesta en el ritual de cartas.');
-    }
   };
 
   // Manage steps inside active free spins
@@ -653,21 +577,6 @@ export const SlotMachine: React.FC = () => {
               >
                 Wilds
               </button>
-              <button
-                onClick={() => setIsWheelActive(true)}
-                className="px-1.5 sm:px-2 py-0.5 sm:py-1 text-[9px] sm:text-[10px] bg-amber-950/80 border border-amber-600 text-amber-300 font-bold hover:bg-amber-800 hover:text-white rounded transition-colors flex items-center gap-1 active:scale-95"
-              >
-                <Disc className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-400" /> Rueda
-              </button>
-              <button
-                onClick={() => {
-                  if (lastWin <= 0) setLastWin(250);
-                  setIsGambleActive(true);
-                }}
-                className="px-1.5 sm:px-2 py-0.5 sm:py-1 text-[9px] sm:text-[10px] bg-red-950/80 border border-red-500 text-red-300 font-bold hover:bg-red-800 hover:text-white rounded transition-colors flex items-center gap-1 active:scale-95"
-              >
-                <Flame className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-red-400" /> Doblar
-              </button>
             </div>
           </div>
 
@@ -692,8 +601,6 @@ export const SlotMachine: React.FC = () => {
           onDecreaseBet={decreaseBet}
           onCashOut={handleCashOut}
           onOpenPaytable={() => setIsPaytableOpen(true)}
-          onOpenGamble={() => setIsGambleActive(true)}
-          onOpenWheel={() => setIsWheelActive(true)}
           freeSpinsLeft={freeSpinsLeft}
           isFreeSpinsActive={isFreeSpinsActive}
         />
@@ -713,26 +620,6 @@ export const SlotMachine: React.FC = () => {
         winAmount={lastWin}
         celebrationType={celebrationType}
         onClose={() => setIsCelebrationOpen(false)}
-      />
-
-      {/* 3. Coffin Bonus Crypt Mini-Game Picker */}
-      <CoffinBonusModal
-        isOpen={isBonusActive}
-        onClose={handleCloseBonusPicker}
-      />
-
-      {/* 4. Dracula's Blood Wheel Minigame */}
-      <DraculaWheelModal
-        isOpen={isWheelActive}
-        baseBet={currentBet}
-        onClose={handleCloseWheel}
-      />
-
-      {/* 5. Gamble: Doble o Nada Card Ritual */}
-      <GambleCardModal
-        isOpen={isGambleActive}
-        initialWin={lastWin > 0 ? lastWin : 100}
-        onClose={handleCloseGamble}
       />
 
     </div>
