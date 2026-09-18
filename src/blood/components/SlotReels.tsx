@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { SYMBOLS, PAYLINES, SymbolDef } from '../data/gameData';
-import { SymbolRenderer, SYMBOL_ASSETS } from './SymbolRenderer';
+import { SymbolRenderer } from './SymbolRenderer';
 import { WinningLine } from '../utils/GameEngine';
+import BloodPixiReels from './BloodPixiReels';
 
 interface SlotReelsProps {
   grid: string[][]; // 5 reels x 3 rows
@@ -13,68 +14,6 @@ interface SlotReelsProps {
 }
 
 const spinImageCache = new Map<string, HTMLImageElement>();
-
-const SpinCanvas: React.FC<{ spinningReels: boolean[]; isTurbo: boolean; grid: string[][] }> = ({ spinningReels, isTurbo, grid }) => {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const spinningRef = useRef(spinningReels);
-  spinningRef.current = spinningReels;
-  const anySpinning = spinningReels.some(Boolean);
-  const strip = ['vampire_lord', 'gothic_castle', 'blood_chalice', 'wild_fangs', 'vampire_countess', 'scatter_moon', 'bonus_coffin', 'gothic_bat', 'gothic_a', 'gothic_k', 'gothic_q', 'gothic_j'];
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas || !anySpinning) return;
-    const ctx = canvas.getContext('2d', { alpha: true });
-    if (!ctx) return;
-    // A 2x backing canvas quadruples fill cost with little visual gain here.
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
-    canvas.width = Math.max(1, Math.floor(width * dpr));
-    canvas.height = Math.max(1, Math.floor(height * dpr));
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const images = new Map<string, HTMLImageElement>();
-    // Build each reel strip once; allocating it inside requestAnimationFrame
-    // caused garbage-collection pauses on weaker phones.
-    const reelStrips = grid.map(col => [...strip, ...col, ...strip]);
-    const allIds = Array.from(new Set([...strip, ...grid.flat()]));
-    allIds.forEach(id => {
-      let img = spinImageCache.get(id);
-      if (!img) {
-        img = new Image();
-        img.decoding = 'async';
-        img.src = SYMBOL_ASSETS[id].src;
-        spinImageCache.set(id, img);
-      }
-      images.set(id, img);
-    });
-    let frame = 0;
-    const started = performance.now();
-    const draw = (now: number) => {
-      ctx.clearRect(0, 0, width, height);
-      const cellW = width / 5;
-      const cellH = height / 3;
-      const speed = isTurbo ? 1800 : 1300;
-      const elapsed = ((now - started) * speed / 1000) % (strip.length * cellH);
-      spinningRef.current.forEach((spinning, col) => {
-        if (!spinning) return;
-        const targetStrip = reelStrips[col] || strip;
-        const localOffset = elapsed % (targetStrip.length * cellH);
-        for (let i = -1; i <= 4; i++) {
-          const index = (i + Math.floor(localOffset / cellH) + col * 2 + targetStrip.length * 10) % targetStrip.length;
-          const y = i * cellH - (localOffset % cellH);
-          const img = images.get(targetStrip[index]);
-          if (img && img.complete) ctx.drawImage(img, col * cellW + 4, y + 4, cellW - 8, cellH - 8);
-        }
-      });
-      frame = requestAnimationFrame(draw);
-    };
-    frame = requestAnimationFrame(draw);
-    return () => cancelAnimationFrame(frame);
-  }, [anySpinning, isTurbo]);
-
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full z-[15] pointer-events-none" aria-hidden="true" />;
-};
 
 export const SlotReels: React.FC<SlotReelsProps> = ({
   grid,
@@ -398,7 +337,7 @@ export const SlotReels: React.FC<SlotReelsProps> = ({
           ))}
         </div>
 
-        <SpinCanvas spinningReels={spinningReels} isTurbo={isTurbo} grid={grid} />
+        <BloodPixiReels spinningReels={spinningReels} isTurbo={isTurbo} grid={grid} />
 
         {/* Columns and Reel Tapes */}
         <div className="absolute inset-0 grid grid-cols-5 z-10">
