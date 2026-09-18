@@ -16,11 +16,14 @@ const spinImageCache = new Map<string, HTMLImageElement>();
 
 const SpinCanvas: React.FC<{ spinningReels: boolean[]; isTurbo: boolean }> = ({ spinningReels, isTurbo }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const spinningRef = useRef(spinningReels);
+  spinningRef.current = spinningReels;
+  const anySpinning = spinningReels.some(Boolean);
   const strip = ['vampire_lord', 'gothic_castle', 'blood_chalice', 'wild_fangs', 'vampire_countess', 'scatter_moon', 'bonus_coffin', 'gothic_bat', 'gothic_a', 'gothic_k', 'gothic_q', 'gothic_j'];
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas || !spinningReels.some(Boolean)) return;
+    if (!canvas || !anySpinning) return;
     const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -48,7 +51,7 @@ const SpinCanvas: React.FC<{ spinningReels: boolean[]; isTurbo: boolean }> = ({ 
       const cellH = height / 3;
       const speed = isTurbo ? 1800 : 1300;
       const elapsed = ((now - started) * speed / 1000) % (strip.length * cellH);
-      spinningReels.forEach((spinning, col) => {
+      spinningRef.current.forEach((spinning, col) => {
         if (!spinning) return;
         for (let i = -1; i <= 4; i++) {
           const index = (i + Math.floor(elapsed / cellH) + col * 2 + strip.length * 10) % strip.length;
@@ -61,7 +64,7 @@ const SpinCanvas: React.FC<{ spinningReels: boolean[]; isTurbo: boolean }> = ({ 
     };
     frame = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(frame);
-  }, [spinningReels, isTurbo]);
+  }, [anySpinning, isTurbo]);
 
   return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full z-[15] pointer-events-none" aria-hidden="true" />;
 };
