@@ -366,12 +366,12 @@ export const SlotReels: React.FC<SlotReelsProps> = ({
                 {isReelSpinning ? (
                   // Spinning animation: seamless vertical reel tape scrolling infinitely
                   <div 
-                    className="w-full flex flex-col will-change-transform"
+                    className="w-full flex flex-col will-change-transform [backface-visibility:hidden] [contain:layout_paint]"
                     style={{
                       height: `${(SEAMLESS_STRIP.length / 3) * 100}%`,
                       animation: `reelSpin ${isTurbo ? '0.24s' : '0.38s'} linear infinite`,
                       animationDelay: `${colIdx * 0.05}s`,
-                      filter: 'blur(3px)'
+                      backfaceVisibility: 'hidden'
                     }}
                   >
                     {SEAMLESS_STRIP.map((symId, dummyIdx) => (
