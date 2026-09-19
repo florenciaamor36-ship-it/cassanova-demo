@@ -327,7 +327,7 @@ export const SlotReels: React.FC<SlotReelsProps> = ({
     <div className="relative w-full max-w-[92vw] md:max-w-none mx-auto p-1.5 sm:p-3 bg-gradient-to-b from-[#380202] via-[#1a0101] to-[#380202] rounded-2xl border-2 border-amber-600/70 shadow-[0_0_40px_rgba(220,38,38,0.5)]">
       <div 
         ref={containerRef}
-        className={`relative w-full aspect-[5/3] min-h-[135px] sm:min-h-[260px] md:min-h-[300px] bg-neutral-950 rounded-lg border-2 sm:border-4 border-[#3a0202] overflow-hidden shadow-[inset_0_0_50px_rgba(0,0,0,0.9),0_0_25px_rgba(88,0,0,0.4)]
+        className={`relative w-full aspect-[5/3] max-md:aspect-[5/7] min-h-[135px] sm:min-h-[260px] md:min-h-[300px] bg-neutral-950 rounded-lg border-2 sm:border-4 border-[#3a0202] overflow-hidden shadow-[inset_0_0_50px_rgba(0,0,0,0.9),0_0_25px_rgba(88,0,0,0.4)]
           ${hasWins ? 'shadow-[inset_0_0_60px_rgba(220,38,38,0.3),0_0_35px_rgba(234,179,8,0.5)]' : ''}`}
       >
         {/* Background backing glow grid */}
