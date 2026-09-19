@@ -51,6 +51,9 @@ export const SlotMachine: React.FC = () => {
   const [isFreeSpinsActive, setIsFreeSpinsActive] = useState<boolean>(false);
   const [freeSpinsLeft, setFreeSpinsLeft] = useState<number>(0);
   const [freeSpinsWinAccum, setFreeSpinsWinAccum] = useState<number>(0);
+  const freeSpinsActiveRef = useRef(false);
+  const freeSpinsLeftRef = useRef(0);
+  const freeSpinsWinAccumRef = useRef(0);
 
   // --- Progressive Grand Jackpot Pool ---
   const [jackpotPool, setJackpotPool] = useState<number>(75420);
@@ -267,7 +270,7 @@ export const SlotMachine: React.FC = () => {
     if (isSpinning) return;
 
     // Check credits
-    if (!isFreeSpinsActive && credits < currentBet) {
+    if (!freeSpinsActiveRef.current && credits < currentBet) {
       setWinAnnouncement('¡Créditos insuficientes! Usa el botón COBRAR para recargar saldo.');
       setIsAutoPlaying(false);
       return;
@@ -280,7 +283,7 @@ export const SlotMachine: React.FC = () => {
     setWinAnnouncement('');
 
     // Deduct credits if normal spin
-    if (!isFreeSpinsActive) {
+    if (!freeSpinsActiveRef.current) {
       setCredits(prev => prev - currentBet);
       setLastWin(0);
     }
@@ -340,8 +343,11 @@ export const SlotMachine: React.FC = () => {
     setLastWin(evaluated.totalWin);
 
     if (hasWinnings) {
-      if (isFreeSpinsActive) {
-        setFreeSpinsWinAccum(prev => prev + evaluated.totalWin);
+      if (freeSpinsActiveRef.current) {
+        // Free-spin winnings stay in the round accumulator and are credited once
+        // when the round closes. Do not also add them to the bank per spin.
+        freeSpinsWinAccumRef.current += evaluated.totalWin;
+        setFreeSpinsWinAccum(freeSpinsWinAccumRef.current);
       } else {
         setCredits(prev => prev + evaluated.totalWin);
       }
@@ -383,16 +389,25 @@ export const SlotMachine: React.FC = () => {
         setWinAnnouncement(`¡Has ganado $${evaluated.totalWin}!`);
       }
 
-      // 2. Handle Free Spins triggering
+      // 2. Surface the coffin event explicitly. The old minigame was removed;
+      // keep the detected event visible instead of silently dropping it.
+      if (evaluated.isBonusTriggered) {
+        setWinAnnouncement(`⚰️ BONUS DE ATAÚDES ACTIVADO: ${evaluated.bonusCount} ATAÚDES`);
+        await new Promise<void>((resolve) => schedule(resolve, 900));
+      }
+
+      // 3. Handle Free Spins triggering
       if (isFreeTrigger) {
         AudioEngine.playFreeSpins();
         setWinAnnouncement(`🔮 ¡LUNA DE SANGRE! ${evaluated.freeSpinsCount} TIROS GRATIS ACTIVADOS`);
+        freeSpinsActiveRef.current = true;
+        freeSpinsLeftRef.current += evaluated.freeSpinsCount;
         setIsFreeSpinsActive(true);
-        setFreeSpinsLeft(prev => prev + evaluated.freeSpinsCount);
+        setFreeSpinsLeft(freeSpinsLeftRef.current);
       }
 
       // Bonus minigames removed: continue the normal sequence without opening extra games.
-      if (isFreeSpinsActive) {
+      if (freeSpinsActiveRef.current) {
         handleFreeSpinsStep();
       } else if (isAutoPlaying) {
         schedule(() => { triggerSpin(); }, isTurbo ? 600 : 1500);
@@ -404,30 +419,24 @@ export const SlotMachine: React.FC = () => {
 
   // Manage steps inside active free spins
   const handleFreeSpinsStep = () => {
-    if (freeSpinsLeft > 0) {
-      // Deduct a free spin
-      const nextSpins = freeSpinsLeft - 1;
-      setFreeSpinsLeft(nextSpins);
+    const nextSpins = Math.max(0, freeSpinsLeftRef.current - 1);
+    freeSpinsLeftRef.current = nextSpins;
+    setFreeSpinsLeft(nextSpins);
 
-      if (nextSpins === 0) {
-        // End of Free Spins cascade
-        schedule(() => {
-          setWinAnnouncement(`🧛 TIROS GRATIS COMPLETADOS: +$${freeSpinsWinAccum}`);
-          setCredits(prev => prev + freeSpinsWinAccum);
-          setLastWin(freeSpinsWinAccum);
-          setFreeSpinsWinAccum(0);
-          setIsFreeSpinsActive(false);
-          
-          if (isAutoPlaying) {
-            schedule(() => triggerSpin(), 1500);
-          }
-        }, 1200);
-      } else {
-        // Schedule next free spin automáticamente!
-        schedule(() => {
-          triggerSpin();
-        }, isTurbo ? 800 : 1800);
-      }
+    if (nextSpins === 0 && freeSpinsActiveRef.current) {
+      schedule(() => {
+        const accumulated = freeSpinsWinAccumRef.current;
+        setWinAnnouncement(`🧛 TIROS GRATIS COMPLETADOS: +$${accumulated}`);
+        setCredits(prev => prev + accumulated);
+        setLastWin(accumulated);
+        freeSpinsWinAccumRef.current = 0;
+        setFreeSpinsWinAccum(0);
+        freeSpinsActiveRef.current = false;
+        setIsFreeSpinsActive(false);
+        if (isAutoPlaying) schedule(() => triggerSpin(), 1500);
+      }, 1200);
+    } else if (nextSpins > 0) {
+      schedule(() => triggerSpin(), isTurbo ? 800 : 1800);
     }
   };
 
