@@ -250,7 +250,7 @@ export const WinCelebrationModal: React.FC<WinCelebrationModalProps> = ({
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Fewer particles and one spawn per frame keep mobile GPU work bounded.
-      const particleCap = window.matchMedia('(pointer: coarse)').matches ? 55 : 85;
+      const particleCap = window.matchMedia('(pointer: coarse)').matches ? 24 : 40;
       if (particles.length < particleCap) spawnParticle();
 
       particles.forEach((p, index) => {
@@ -407,14 +407,14 @@ export const WinCelebrationModal: React.FC<WinCelebrationModalProps> = ({
       {isOpen && (
         <div 
           onClick={handleInstantSkip}
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-hidden cursor-pointer select-none"
+          className="fixed inset-0 z-[100] flex flex-col items-center justify-center p-4 bg-black/85 overflow-hidden cursor-pointer select-none"
         >
           {/* Background Canvas: Explosive 3D Coins, Rubies & Bats */}
           <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-10" />
 
           {/* Rotating Volumetric Sunburst Golden God Rays (Full screen) */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden">
-            <div className="w-[1000px] h-[1000px] md:w-[1500px] md:h-[1500px] rounded-full animate-[spin_40s_linear_infinite] opacity-40 bg-[conic-gradient(from_0deg,#eab308,transparent_15deg,#eab308_30deg,transparent_45deg,#dc2626_60deg,transparent_75deg,#eab308_90deg,transparent_105deg,#eab308_120deg,transparent_135deg,#dc2626_150deg,transparent_165deg,#eab308_180deg,transparent_195deg,#eab308_210deg,transparent_225deg,#dc2626_240deg,transparent_255deg,#eab308_270deg,transparent_285deg,#eab308_300deg,transparent_315deg,#dc2626_330deg,transparent_345deg,#eab308_360deg)] filter blur-md" />
+            <div className="w-[900px] h-[900px] md:w-[1200px] md:h-[1200px] rounded-full animate-[spin_40s_linear_infinite] opacity-30 bg-[conic-gradient(from_0deg,#eab308,transparent_15deg,#eab308_30deg,transparent_45deg,#dc2626_60deg,transparent_75deg,#eab308_90deg,transparent_105deg,#eab308_120deg,transparent_135deg,#dc2626_150deg,transparent_165deg,#eab308_180deg,transparent_195deg,#eab308_210deg,transparent_225deg,#dc2626_240deg,transparent_255deg,#eab308_270deg,transparent_285deg,#eab308_300deg,transparent_315deg,#dc2626_330deg,transparent_345deg,#eab308_360deg)]" />
             <div className="absolute w-[600px] h-[600px] rounded-full bg-red-600/35 blur-[140px] animate-pulse" />
           </div>
 

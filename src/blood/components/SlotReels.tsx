@@ -108,7 +108,7 @@ export const SlotReels: React.FC<SlotReelsProps> = ({
             winLine.coords.forEach(([col, row]) => {
               const center = getCellCenter(col, row);
               if (Math.random() < 0.2) {
-                if (particles.length < 80) {
+                if (particles.length < 24) {
                   particles.push({
                     x: center.x + (Math.random() - 0.5) * cellWidth * 0.6,
                     y: center.y + (Math.random() - 0.5) * cellHeight * 0.6,
@@ -125,7 +125,7 @@ export const SlotReels: React.FC<SlotReelsProps> = ({
               ctx.save();
               ctx.strokeStyle = winLine.lineId === 100 ? '#10b981' : '#f43f5e';
               ctx.lineWidth = 3 + Math.sin(pulseTime) * 1;
-              ctx.shadowBlur = 10;
+              ctx.shadowBlur = 0;
               ctx.shadowColor = ctx.strokeStyle;
               ctx.strokeRect(col * cellWidth + 4, row * cellHeight + 4, cellWidth - 8, cellHeight - 8);
               ctx.restore();
@@ -149,7 +149,7 @@ export const SlotReels: React.FC<SlotReelsProps> = ({
             // Pulsing Neon Laser effect
             ctx.strokeStyle = lineColor;
             ctx.lineWidth = 4 + Math.sin(pulseTime) * 1.5;
-            ctx.shadowBlur = 15;
+            ctx.shadowBlur = 0;
             ctx.shadowColor = lineColor;
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
@@ -170,7 +170,7 @@ export const SlotReels: React.FC<SlotReelsProps> = ({
               
               // Interpolate
               const t = Math.random();
-              if (particles.length < 80) {
+              if (particles.length < 24) {
                 particles.push({
                   x: start.x + (end.x - start.x) * t,
                   y: start.y + (end.y - start.y) * t,
@@ -188,7 +188,7 @@ export const SlotReels: React.FC<SlotReelsProps> = ({
               ctx.save();
               ctx.strokeStyle = '#f59e0b';
               ctx.lineWidth = 3;
-              ctx.shadowBlur = 12;
+              ctx.shadowBlur = 0;
               ctx.shadowColor = '#f59e0b';
               ctx.strokeRect(col * cellWidth + 5, row * cellHeight + 5, cellWidth - 10, cellHeight - 10);
               ctx.restore();
@@ -211,7 +211,7 @@ export const SlotReels: React.FC<SlotReelsProps> = ({
                 const badgeY = centerPt.y - badgeHeight / 2 - 12 + Math.sin(pulseTime * 2.5) * 3;
 
                 // Outer Gold Glow
-                ctx.shadowBlur = 12;
+                ctx.shadowBlur = 0;
                 ctx.shadowColor = '#f59e0b';
 
                 // Pill Background
@@ -227,7 +227,7 @@ export const SlotReels: React.FC<SlotReelsProps> = ({
                 ctx.fillStyle = '#fef08a';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.shadowBlur = 4;
+                ctx.shadowBlur = 0;
                 ctx.shadowColor = '#000000';
                 ctx.fillText(badgeText, centerPt.x, badgeY + badgeHeight / 2);
                 ctx.restore();
@@ -254,7 +254,7 @@ export const SlotReels: React.FC<SlotReelsProps> = ({
         ctx.beginPath();
         ctx.arc(p.x, p.y, Math.max(0.1, p.size), 0, Math.PI * 2);
         ctx.fillStyle = p.color;
-        ctx.shadowBlur = 6;
+        ctx.shadowBlur = 0;
         ctx.shadowColor = p.color;
         ctx.fill();
         ctx.restore();
