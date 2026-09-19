@@ -114,7 +114,8 @@ export const WinCelebrationModal: React.FC<WinCelebrationModalProps> = ({
       }
 
       let start = 0;
-      const duration = 2200;
+      // Keep the celebration punchy; the old 2.2s sequence felt frozen on phones.
+      const duration = 1200;
       const stepTime = 25;
       const totalSteps = duration / stepTime;
       const increment = winAmount / totalSteps;
@@ -248,11 +249,9 @@ export const WinCelebrationModal: React.FC<WinCelebrationModalProps> = ({
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Keep particles alive and dense for intense action
-      if (particles.length < 180) {
-        spawnParticle();
-        spawnParticle();
-      }
+      // Fewer particles and one spawn per frame keep mobile GPU work bounded.
+      const particleCap = window.matchMedia('(pointer: coarse)').matches ? 55 : 85;
+      if (particles.length < particleCap) spawnParticle();
 
       particles.forEach((p, index) => {
         p.x += p.vx;
