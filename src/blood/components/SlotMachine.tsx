@@ -10,6 +10,8 @@ import { Volume2, VolumeX, ShieldCheck, Flame, Moon, Compass, Gift, Trophy, Disc
 import castleBgImg from '../assets/images/gothic_castle_bg_1789671734060.webp';
 import lordPortraitImg from '../assets/images/vampire_lord_portrait_1789671748955.webp';
 import countessPortraitImg from '../assets/images/vampire_countess_portrait_1789671766123.webp';
+import halloweenFramePc from '../assets/slots/halloween/frame-pc.png';
+import halloweenFrameMobile from '../assets/slots/halloween/frame-mobile.png';
 
 export const SlotMachine: React.FC = () => {
   // --- Game Core States ---
@@ -542,8 +544,13 @@ export const SlotMachine: React.FC = () => {
         />
 
         {/* CENTER SLOT CABIN */}
-        <div id="slot-cabin-box" className="w-full max-w-3xl flex flex-col items-center">
-          
+        <div id="slot-cabin-box" className="relative w-full max-w-3xl flex flex-col items-center">
+          {/* Halloween skin: the center is transparent so only the real Pixi reels show. */}
+          <picture className="absolute inset-0 z-30 pointer-events-none select-none">
+            <source media="(max-width: 767px)" srcSet={halloweenFrameMobile} />
+            <img src={halloweenFramePc} alt="Halloween slot frame" className="w-full h-full object-contain" />
+          </picture>
+
           {/* Win Announcement Bar above Reels */}
           <div className="w-full h-8 sm:h-10 flex items-center justify-center bg-black/80 border border-[#3a0202] rounded-t-xl px-2 sm:px-4 text-center">
             <span className={`text-[11px] sm:text-xs md:text-sm font-bold tracking-wider font-cinzel transition-all duration-300 truncate ${winAnnouncement ? 'text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.4)]' : 'text-neutral-500'}`}>
