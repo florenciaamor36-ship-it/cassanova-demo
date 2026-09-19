@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import React, { Component, ErrorInfo, ReactNode, useEffect } from 'react';
 import { SlotMachine } from './components/SlotMachine';
 
 interface ErrorBoundaryProps {
@@ -58,6 +58,16 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 }
 
 export default function App() {
+  useEffect(() => {
+    document.title = 'Blood Covenant – Gothic Slots';
+    const description = document.querySelector('meta[name="description"]');
+    description?.setAttribute('content', 'Blood Covenant – tragamonedas gótica de vampiros con cinco rodillos, tiros gratis y bonus de ataúdes.');
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    ogTitle?.setAttribute('content', 'Blood Covenant – Gothic Slots');
+    const ogDescription = document.querySelector('meta[property="og:description"]');
+    ogDescription?.setAttribute('content', 'Blood Covenant – tragamonedas gótica de vampiros con tiros gratis y bonus de ataúdes.');
+  }, []);
+
   return (
     <div id="app-root-container" className="w-full min-h-screen bg-black">
       <ErrorBoundary>
